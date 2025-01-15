@@ -1,0 +1,35 @@
+{
+  "name": "console-style",
+  "version": "1.0.0",
+  "description": "Easily customize console.log for colors, font styles, and more!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/invictus-anic3tus/console.style.git"
+  },
+  "keywords": [
+    "console",
+    "style",
+    "colors",
+    "color",
+    "font",
+    "bold",
+    "italic",
+    "underline",
+    "underscore",
+    "strikethrough",
+    "print",
+    "log",
+    "fun",
+    "easy"
+  ],
+  "author": "Anicetus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/invictus-anic3tus/console.style/issues"
+  },
+  "homepage": "https://github.com/invictus-anic3tus/console.style#readme"
+}
