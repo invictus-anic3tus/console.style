@@ -1,5 +1,6 @@
 const ansiColors = {
   background: {
+    normal: '0',
     black: "40",
     red: "41",
     green: "42",
@@ -12,6 +13,7 @@ const ansiColors = {
     gray: "100",
   },
   color: {
+    normal: '0',
     black: "30",
     red: "31",
     green: "32",
@@ -22,30 +24,52 @@ const ansiColors = {
     cyan: "36",
     white: "37",
     gray: "90",
+    brightblack: '90',
+    brightred: '91',
+    brightgreen: '92',
+    brightyellow: '93',
+    brightblue: '94',
+    brightmagenta: '95',
+    brightcyan: '96',
+    brightwhite: '97'
   },
 };
 
 var nextNoNewline = false;
+var prevStyle = '';
+var prevColors = '';
 
-function returnFunc(string = 'My string', rawFontColor = 'white', rawBackgroundColor = 'black', style = 'normal', newline = true, keepLastFormat = false) {
+function returnFunc(string = 'My string', rawFontColor, rawBackgroundColor, rawStyle, newline = true, keepLastFormat = false) {
 
-  let colors = processColors(rawFontColor, rawBackgroundColor);
-  let styles = processStyle(style);
+  if (string == 'console.style party!') {
+    party();
+    return;
+  }
 
+  let colors = '';
+  let styles = processStyle(rawStyle);
   let formattedString = '';
+
+  if (typeof rawFontColor !== 'undefined') {
+    colors = processColors(rawFontColor);
+  }
+  if (typeof rawFontColor !== 'undefined' && typeof rawBackgroundColor !== undefined) {
+    colors = processColors(rawFontColor, rawBackgroundColor);
+  }
 
   colors = colors;
 
   if (typeof colors == 'undefined') {
     return;
   }
-  
-  formattedString = `\x1b[${styles}m` + colors + string;
 
-  if (!keepLastFormat) {
-    formattedString = `\x1b[${styles}m` + colors + string + '\x1b[0m';
-    process.stdout.write('\x1b[0m');
+  if (keepLastFormat) {
+    styles = prevStyle;
+    colors = prevColors;
   }
+  
+  formattedString = styles + colors + string + '\x1b[0m';
+  process.stdout.write('\x1b[0m');
 
   if (!nextNoNewline) {
     if (newline) {
@@ -60,6 +84,9 @@ function returnFunc(string = 'My string', rawFontColor = 'white', rawBackgroundC
     process.stdout.write(formattedString);
     nextNoNewline = false;
   }
+
+  prevStyle = styles;
+  prevColors = colors;
   
 }
 
@@ -108,12 +135,31 @@ function processColors(color, background) {
   return newColor;
 }
 
-function processStyle(style) {
-  style = style.toLowerCase().trim();
+function processStyle(rawStyle) {
+
+  let styleReturnString = '';
+
+  if (typeof rawStyle === 'undefined') {
+    return '';
+  }
+  else if (typeof rawStyle === 'string') {
+    return oneStyle(rawStyle);
+  }
+  else if (typeof rawStyle === 'object') {
+    rawStyle.forEach(element => {
+      styleReturnString = styleReturnString + oneStyle(element);
+    });
+    return styleReturnString;
+  }
+  
+}
+
+function oneStyle(rawStyle) {
+  rawStyle = rawStyle.toLowerCase().trim();
 
   let formattedStyle = 0;
 
-  switch (style) {
+  switch (rawStyle) {
     case 'bold':
       formattedStyle = 1;
       break;
@@ -206,7 +252,23 @@ function processStyle(style) {
       break;
   }
 
-  return formattedStyle;
+  let logStyle = '\x1b[' + formattedStyle + 'm';
+  return logStyle;
 }
 
-module.exports = returnFunc
+function party() {
+  let bold = '\x1b[1m';
+  let italic = '\x1b[2m';
+  let underline = '\x1b[4m';
+  let norm = '\x1b[0m';
+  
+
+  console.log(bold + processColors('red') + 'P' + norm + bold + processColors('brightyellow') + 'A' + norm + bold + italic + processColors('brightgreen') + 'R' + norm + bold + processColors('blue') + 'T' + norm + bold + processColors('purple') + 'Y' + norm + bold + processColors('brightred') + 'Y' + norm + bold + processColors('white') + 'Y' + norm + bold + processColors('cyan') + 'Y' + norm + bold + processColors('green') + '!' + norm + bold + processColors('yellow') + '!' + norm);
+}
+
+module.exports = {
+  returnFunc,
+  party,
+};
+
+module.exports = returnFunc;
