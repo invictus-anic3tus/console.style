@@ -25,7 +25,9 @@ const ansiColors = {
   },
 };
 
-function returnFunc(string, rawFontColor, rawBackgroundColor, style, keepLastFormat) {
+var nextNoNewline = false;
+
+function returnFunc(string = 'My string', rawFontColor = 'white', rawBackgroundColor = 'black', style = 'normal', newline = true, keepLastFormat = false) {
 
   let colors = processColors(rawFontColor, rawBackgroundColor);
   let styles = processStyle(style);
@@ -42,10 +44,23 @@ function returnFunc(string, rawFontColor, rawBackgroundColor, style, keepLastFor
 
   if (!keepLastFormat) {
     formattedString = `\x1b[${styles}m` + colors + string + '\x1b[0m';
-    console.log('\x1b[0m');
+    process.stdout.write('\x1b[0m');
   }
 
-  console.log(formattedString);
+  if (!nextNoNewline) {
+    if (newline) {
+      console.log(formattedString);
+    }
+    else {
+      process.stdout.write(formattedString);
+      nextNoNewline = true;
+    }
+  }
+  else {
+    process.stdout.write(formattedString);
+    nextNoNewline = false;
+  }
+  
 }
 
 function processColors(color, background) {

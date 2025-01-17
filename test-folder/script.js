@@ -5,6 +5,8 @@ const consoleStyle = require("console-style");
 
 // Some examples!
 
+consoleStyle('Normal text');
+
 consoleStyle("White, bold text", "white", "black", "bold");
 
 consoleStyle("Red, italic text", "red", "black", "italic");
@@ -15,6 +17,8 @@ consoleStyle("Purple background and overline", "white", "purple", "overline");
 
 consoleStyle("Black on yellow with a strikethrough", "black", "yellow", "strikethrough");
 
+consoleStyle("no newline after, ", undefined, undefined, undefined, false);
+consoleStyle('and no newline before!');
 
 // And so much more!
 

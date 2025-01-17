@@ -1,5 +1,5 @@
 {
-  "name": "console-style",
+  "name": "@anicetus/console-style",
   "version": "1.0.0",
   "description": "Easily customize console.log for colors, font styles, and more!",
   "main": "index.js",
